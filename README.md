@@ -16,7 +16,7 @@ namespace vma = vk::vma;
 * Compile-time viability checking for struct extensions (i.e. those chained with `pNext`).
 * No need to specify `sType` yourself.
 * Informative comments from `vk.xml` registry.
-* Organized in a way such that you can lookup the related version/extension for an entity (e.g. enum/struct/function) quickly.
+* Code arranged in a way such that you can lookup the related info for an entity (e.g. enum/struct/function) quickly.
 * Default parameters.
 
 ## Why not Vulkan-Hpp
@@ -26,11 +26,9 @@ It's too heavyweight and almost unusable without using the C++ module version.
 ### Types
 `VkName` -> `vk::Name`
 
-### Free Functions 
-`vkName` -> `vk::name`
-
-### Handle Functions 
-`vkHandleName(handle, ...)` -> `handle.name(...)`
+### Functions 
+* `vkName` -> `vk::name`
+* `vkName(handle, ...)` -> `handle.name(...)`
 
 ### Enums
 `VK_ENUM_NAME` -> `vk::Enum::eName`
@@ -38,15 +36,15 @@ It's too heavyweight and almost unusable without using the C++ module version.
 ### FlagBits
 `VK_ENUM_NAME_BIT` -> `vk::EnumFlagBits::bName`
 
-In all other cases the extension suffix is preserved.
+In all cases the extension suffix is preserved.
 
 ## Struct
 ### Constructors
-* `sType` is automatically set.
+* `sType` is automatically set for extensible structs.
 * Default constructor is value-initialized.
-* Parametric constructor is available if all fields are required.
+* Parametric constructor is available if all members are required.
 
-### Properties
+### Members
 * `prop` -> `setProp`/`getProp`
 * `pProp` -> `setProp`/`getProp`
 
@@ -57,7 +55,7 @@ If a struct is extensible, `attach` member functions for each extension are avai
 If the attachment must be the first one, it's named `attachHead` instead.
 #### Example
 ```c++
-vx::PipelineShaderStageCreateInfo shaderStageInfo;
+vk::PipelineShaderStageCreateInfo shaderStageInfo;
 vk::ShaderModuleCreateInfo moduleInfo;
 vk::DebugUtilsObjectNameInfoEXT objectNameInfo;
 shaderStageInfo.attachHead(moduleInfo);
@@ -67,3 +65,8 @@ shaderStageInfo.attach(objectNameInfo);
 ## Calling Conventions
 * `void function(..., T* out)` -> `T function(...)`
 * `VkResult function(..., T* out)` -> `vk::Ret<T> function(...)`
+
+## Exceptions
+`std::system_error` with `vk::errorCategory()` is used for exceptions.
+* `check(vk::Result)` throws if `Result` is not `eSuccess`.
+* `vk::Ret<T>::get()` throws if `Ret<T>::result` is not `eSuccess`.
