@@ -708,8 +708,8 @@ namespace vklite::vma {
         }
         Result flushAllocations(uint32_t allocationCount,
                                 const Allocation* allocations,
-                                const VkDeviceSize* offsets = {},
-                                const VkDeviceSize* sizes = {}) const {
+                                const DeviceSize* offsets = {},
+                                const DeviceSize* sizes = {}) const {
             return Result(vmaFlushAllocations(
                 handle, allocationCount,
                 std::bit_cast<const VmaAllocation*>(allocations), offsets,
@@ -717,12 +717,30 @@ namespace vklite::vma {
         }
         Result invalidateAllocations(uint32_t allocationCount,
                                      const Allocation* allocations,
-                                     const VkDeviceSize* offsets = {},
-                                     const VkDeviceSize* sizes = {}) const {
+                                     const DeviceSize* offsets = {},
+                                     const DeviceSize* sizes = {}) const {
             return Result(vmaInvalidateAllocations(
                 handle, allocationCount,
                 std::bit_cast<const VmaAllocation*>(allocations), offsets,
                 sizes));
+        }
+        Result copyMemoryToAllocation(const void* pSrcHostPointer,
+                                      Allocation dstAllocation,
+                                      DeviceSize dstAllocationLocalOffset,
+                                      DeviceSize size) const {
+            return Result(vmaCopyMemoryToAllocation(
+                handle, pSrcHostPointer,
+                std::bit_cast<VmaAllocation>(dstAllocation),
+                dstAllocationLocalOffset, size));
+        }
+        Result copyAllocationToMemory(VmaAllocator allocator,
+                                      VmaAllocation srcAllocation,
+                                      VkDeviceSize srcAllocationLocalOffset,
+                                      void* pDstHostPointer,
+                                      VkDeviceSize size) const {
+            return Result(vmaCopyAllocationToMemory(
+                handle, std::bit_cast<VmaAllocation>(srcAllocation),
+                srcAllocationLocalOffset, pDstHostPointer, size));
         }
         Result checkCorruption(uint32_t memoryTypeBits) const {
             return Result(vmaCheckCorruption(handle, memoryTypeBits));
@@ -756,14 +774,14 @@ namespace vklite::vma {
                 pPassInfo));
         }
         Result bindBufferMemory(Buffer buffer, Allocation allocation,
-                                VkDeviceSize allocationLocalOffset = 0) const {
+                                DeviceSize allocationLocalOffset = 0) const {
             return Result(vmaBindBufferMemory2(
                 handle, std::bit_cast<VmaAllocation>(allocation),
                 allocationLocalOffset, std::bit_cast<VkBuffer>(buffer),
                 nullptr));
         }
         Result bindImageMemory(Image image, Allocation allocation,
-                               VkDeviceSize allocationLocalOffset = 0) const {
+                               DeviceSize allocationLocalOffset = 0) const {
             return Result(vmaBindImageMemory2(
                 handle, std::bit_cast<VmaAllocation>(allocation),
                 allocationLocalOffset, std::bit_cast<VkImage>(image), nullptr));
@@ -784,7 +802,7 @@ namespace vklite::vma {
         Ret<Buffer> createBufferWithAlignment(
             const BufferCreateInfo& bufferCreateInfo,
             const AllocationCreateInfo& allocationCreateInfo,
-            VkDeviceSize minAlignment, Allocation* pAllocation,
+            DeviceSize minAlignment, Allocation* pAllocation,
             AllocationInfo* pAllocationInfo = {}) const {
             Buffer value;
             return {Result(vmaCreateBufferWithAlignment(
@@ -797,7 +815,7 @@ namespace vklite::vma {
         Ret<Buffer>
         createAliasingBuffer(Allocation allocation,
                              const BufferCreateInfo& bufferCreateInfo,
-                             VkDeviceSize allocationLocalOffset = 0) const {
+                             DeviceSize allocationLocalOffset = 0) const {
             Buffer value;
             return {Result(vmaCreateAliasingBuffer2(
                         handle, std::bit_cast<VmaAllocation>(allocation),
@@ -824,7 +842,7 @@ namespace vklite::vma {
         Ret<Image>
         createAliasingImage(Allocation allocation,
                             const ImageCreateInfo& imageCreateInfo,
-                            VkDeviceSize allocationLocalOffset = 0) const {
+                            DeviceSize allocationLocalOffset = 0) const {
             Image value;
             return {Result(vmaCreateAliasingImage2(
                         handle, std::bit_cast<VmaAllocation>(allocation),
