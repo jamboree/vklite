@@ -178,6 +178,8 @@ struct Builder {
         m_enumExtendsMap;
     boost::unordered_flat_map<std::string_view, CommandTypeInfo>
         m_commandElemMap;
+    boost::unordered_flat_map<std::string_view, const Element*>
+        m_internalFeatureMap;
     std::vector<CommandInfo> m_globalCommands;
     std::vector<TypeInfo> m_typeInfos;
     std::vector<DefInfo> m_defInfo;
@@ -217,10 +219,11 @@ struct Builder {
     const StrId paramTag = m_ctx.getUniqueStr("param");
     const StrId lenTag = m_ctx.getUniqueStr("len");
     const StrId apiTag = m_ctx.getUniqueStr("api");
+    const StrId apitypeTag = m_ctx.getUniqueStr("apitype");
     const StrId supportedTag = m_ctx.getUniqueStr("supported");
     const StrId platformTag = m_ctx.getUniqueStr("platform");
     const StrId protectTag = m_ctx.getUniqueStr("protect");
-    const StrId removetTag = m_ctx.getUniqueStr("remove");
+    const StrId removeTag = m_ctx.getUniqueStr("remove");
     const StrId objtypeenumTag = m_ctx.getUniqueStr("objtypeenum");
     const StrId provisionalTag = m_ctx.getUniqueStr("provisional");
 
@@ -1398,20 +1401,18 @@ struct Builder {
                             }
                         });
                 } else if (elem.tag == featureTag) {
-                    if (!checkApi(m_ctx.getList(elem.attrs)))
+                    const auto attrs = m_ctx.getList(elem.attrs);
+                    if (!checkApi(attrs))
                         continue;
-                    processRequireList(elem);
-                    processChildElems(
-                        elem, removetTag, [this](const Element& elem) {
-                            if (const auto nameAttr = findAttr(
-                                    m_ctx.getList(elem.attrs), nameTag)) {
-                                auto name = m_ctx.get(nameAttr);
-                                if (consumeMatch(name, "Vk") ||
-                                    consumeMatch(name, "vk")) {
-                                    m_supported.erase(name);
-                                }
-                            }
-                        });
+                    const auto guard = findAttr(attrs, nameTag);
+                    if (const auto apitypeAttr = findAttr(attrs, apitypeTag)) {
+                        if (m_ctx.get(apitypeAttr) == "internal") {
+                            m_internalFeatureMap.insert(
+                                {m_ctx.get(guard), &elem});
+                            continue;
+                        }
+                    }
+                    processFeature(elem, guard);
                 } else if (elem.tag == extensionsTag) {
                     processChildElems(
                         elem, extensionTag, [this](const Element& elem) {
@@ -1425,7 +1426,8 @@ struct Builder {
                                     return;
                                 if (findAttr(attrs, provisionalTag))
                                     return;
-                                processRequireList(elem);
+                                const auto guard = findAttr(attrs, nameTag);
+                                processRequireList(elem, guard);
                             }
                         });
                 } else if (elem.tag == commandsTag) {
@@ -1452,8 +1454,37 @@ struct Builder {
         }
     }
 
-    void processRequireList(const Element& elem) {
-        const auto guard = findAttr(m_ctx.getList(elem.attrs), nameTag);
+    void processFeature(const Element& elem, StrId guard) {
+        if (const auto dependsAttr =
+                findAttr(m_ctx.getList(elem.attrs), dependsTag)) {
+            auto str = m_ctx.get(dependsAttr);
+            for (;;) {
+                const auto pos = str.find(',');
+                const auto item = str.substr(0, pos);
+                const auto it = m_internalFeatureMap.find(item);
+                if (it != m_internalFeatureMap.end()) {
+                    const auto& internalDep = *it->second;
+                    m_internalFeatureMap.erase(it);
+                    processFeature(internalDep, guard);
+                }
+                if (pos == std::string_view::npos)
+                    break;
+                str.remove_prefix(pos + 1);
+            }
+        }
+        processRequireList(elem, guard);
+        processChildElems(elem, removeTag, [this](const Element& elem) {
+            if (const auto nameAttr =
+                    findAttr(m_ctx.getList(elem.attrs), nameTag)) {
+                auto name = m_ctx.get(nameAttr);
+                if (consumeMatch(name, "Vk") || consumeMatch(name, "vk")) {
+                    m_supported.erase(name);
+                }
+            }
+        });
+    }
+
+    void processRequireList(const Element& elem, StrId guard) {
         m_scopes.insert(m_ctx.get(guard));
         processChildElems(elem, requireTag, [this, guard](const Element& elem) {
             const auto attrs = m_ctx.getList(elem.attrs);
