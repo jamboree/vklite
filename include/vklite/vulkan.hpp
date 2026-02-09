@@ -828,8 +828,8 @@ struct HostAddressRangeEXT : VkHostAddressRangeEXT {
   HostAddressRangeEXT() noexcept : VkHostAddressRangeEXT{} {}
   HostAddressRangeEXT(void* address, size_t size) noexcept : VkHostAddressRangeEXT{.address = address, .size = size} {}
 
-  void setaddress(void* value) { this->address = value; }
-  void* getaddress() const { return this->address; }
+  void setAddress(void* value) { this->address = value; }
+  void* getAddress() const { return this->address; }
   void setSize(size_t value) { this->size = value; }
   size_t getSize() const { return this->size; }
 };
@@ -838,8 +838,8 @@ struct HostAddressRangeConstEXT : VkHostAddressRangeConstEXT {
   HostAddressRangeConstEXT() noexcept : VkHostAddressRangeConstEXT{} {}
   HostAddressRangeConstEXT(const void* address, size_t size) noexcept : VkHostAddressRangeConstEXT{.address = address, .size = size} {}
 
-  void setaddress(const void* value) { this->address = value; }
-  const void* getaddress() const { return this->address; }
+  void setAddress(const void* value) { this->address = value; }
+  const void* getAddress() const { return this->address; }
   void setSize(size_t value) { this->size = value; }
   size_t getSize() const { return this->size; }
 };
@@ -8791,8 +8791,8 @@ struct VertexInputAttributeDescription : VkVertexInputAttributeDescription {
 struct AndroidSurfaceCreateInfoKHR : VkAndroidSurfaceCreateInfoKHR {
   AndroidSurfaceCreateInfoKHR() noexcept : VkAndroidSurfaceCreateInfoKHR{.sType = VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR} {}
 
-  void setwindow(struct ANativeWindow* value) { this->window = value; }
-  struct ANativeWindow* getwindow() const { return this->window; }
+  void setWindow(struct ANativeWindow* value) { this->window = value; }
+  struct ANativeWindow* getWindow() const { return this->window; }
 
   void setFlags(AndroidSurfaceCreateFlagsKHR value) { this->flags = std::bit_cast<VkAndroidSurfaceCreateFlagsKHR>(value); }
   AndroidSurfaceCreateFlagsKHR getFlags() const { return std::bit_cast<AndroidSurfaceCreateFlagsKHR>(this->flags); }
@@ -8803,8 +8803,8 @@ struct AndroidSurfaceCreateInfoKHR : VkAndroidSurfaceCreateInfoKHR {
 struct ViSurfaceCreateInfoNN : VkViSurfaceCreateInfoNN {
   ViSurfaceCreateInfoNN() noexcept : VkViSurfaceCreateInfoNN{.sType = VK_STRUCTURE_TYPE_VI_SURFACE_CREATE_INFO_NN} {}
 
-  void setwindow(void* value) { this->window = value; }
-  void* getwindow() const { return this->window; }
+  void setWindow(void* value) { this->window = value; }
+  void* getWindow() const { return this->window; }
 
   void setFlags(ViSurfaceCreateFlagsNN value) { this->flags = std::bit_cast<VkViSurfaceCreateFlagsNN>(value); }
   ViSurfaceCreateFlagsNN getFlags() const { return std::bit_cast<ViSurfaceCreateFlagsNN>(this->flags); }
@@ -8815,10 +8815,10 @@ struct ViSurfaceCreateInfoNN : VkViSurfaceCreateInfoNN {
 struct WaylandSurfaceCreateInfoKHR : VkWaylandSurfaceCreateInfoKHR {
   WaylandSurfaceCreateInfoKHR() noexcept : VkWaylandSurfaceCreateInfoKHR{.sType = VK_STRUCTURE_TYPE_WAYLAND_SURFACE_CREATE_INFO_KHR} {}
 
-  void setdisplay(struct wl_display* value) { this->display = value; }
-  struct wl_display* getdisplay() const { return this->display; }
-  void setsurface(struct wl_surface* value) { this->surface = value; }
-  struct wl_surface* getsurface() const { return this->surface; }
+  void setDisplay(struct wl_display* value) { this->display = value; }
+  struct wl_display* getDisplay() const { return this->display; }
+  void setSurface(struct wl_surface* value) { this->surface = value; }
+  struct wl_surface* getSurface() const { return this->surface; }
 
   void setFlags(WaylandSurfaceCreateFlagsKHR value) { this->flags = std::bit_cast<VkWaylandSurfaceCreateFlagsKHR>(value); }
   WaylandSurfaceCreateFlagsKHR getFlags() const { return std::bit_cast<WaylandSurfaceCreateFlagsKHR>(this->flags); }
@@ -8843,8 +8843,8 @@ struct Win32SurfaceCreateInfoKHR : VkWin32SurfaceCreateInfoKHR {
 struct XlibSurfaceCreateInfoKHR : VkXlibSurfaceCreateInfoKHR {
   XlibSurfaceCreateInfoKHR() noexcept : VkXlibSurfaceCreateInfoKHR{.sType = VK_STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR} {}
 
-  void setdpy(Display* value) { this->dpy = value; }
-  Display* getdpy() const { return this->dpy; }
+  void setDpy(Display* value) { this->dpy = value; }
+  Display* getDpy() const { return this->dpy; }
   void setWindow(Window value) { this->window = value; }
   Window getWindow() const { return this->window; }
 
@@ -8857,8 +8857,8 @@ struct XlibSurfaceCreateInfoKHR : VkXlibSurfaceCreateInfoKHR {
 struct XcbSurfaceCreateInfoKHR : VkXcbSurfaceCreateInfoKHR {
   XcbSurfaceCreateInfoKHR() noexcept : VkXcbSurfaceCreateInfoKHR{.sType = VK_STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR} {}
 
-  void setconnection(xcb_connection_t* value) { this->connection = value; }
-  xcb_connection_t* getconnection() const { return this->connection; }
+  void setConnection(xcb_connection_t* value) { this->connection = value; }
+  xcb_connection_t* getConnection() const { return this->connection; }
   void setWindow(xcb_window_t value) { this->window = value; }
   xcb_window_t getWindow() const { return this->window; }
 
@@ -8871,10 +8871,10 @@ struct XcbSurfaceCreateInfoKHR : VkXcbSurfaceCreateInfoKHR {
 struct DirectFBSurfaceCreateInfoEXT : VkDirectFBSurfaceCreateInfoEXT {
   DirectFBSurfaceCreateInfoEXT() noexcept : VkDirectFBSurfaceCreateInfoEXT{.sType = VK_STRUCTURE_TYPE_DIRECTFB_SURFACE_CREATE_INFO_EXT} {}
 
-  void setdfb(IDirectFB* value) { this->dfb = value; }
-  IDirectFB* getdfb() const { return this->dfb; }
-  void setsurface(IDirectFBSurface* value) { this->surface = value; }
-  IDirectFBSurface* getsurface() const { return this->surface; }
+  void setDfb(IDirectFB* value) { this->dfb = value; }
+  IDirectFB* getDfb() const { return this->dfb; }
+  void setSurface(IDirectFBSurface* value) { this->surface = value; }
+  IDirectFBSurface* getSurface() const { return this->surface; }
 
   void setFlags(DirectFBSurfaceCreateFlagsEXT value) { this->flags = std::bit_cast<VkDirectFBSurfaceCreateFlagsEXT>(value); }
   DirectFBSurfaceCreateFlagsEXT getFlags() const { return std::bit_cast<DirectFBSurfaceCreateFlagsEXT>(this->flags); }
@@ -8909,10 +8909,10 @@ struct StreamDescriptorSurfaceCreateInfoGGP : VkStreamDescriptorSurfaceCreateInf
 struct ScreenSurfaceCreateInfoQNX : VkScreenSurfaceCreateInfoQNX {
   ScreenSurfaceCreateInfoQNX() noexcept : VkScreenSurfaceCreateInfoQNX{.sType = VK_STRUCTURE_TYPE_SCREEN_SURFACE_CREATE_INFO_QNX} {}
 
-  void setcontext(struct _screen_context* value) { this->context = value; }
-  struct _screen_context* getcontext() const { return this->context; }
-  void setwindow(struct _screen_window* value) { this->window = value; }
-  struct _screen_window* getwindow() const { return this->window; }
+  void setContext(struct _screen_context* value) { this->context = value; }
+  struct _screen_context* getContext() const { return this->context; }
+  void setWindow(struct _screen_window* value) { this->window = value; }
+  struct _screen_window* getWindow() const { return this->window; }
 
   void setFlags(ScreenSurfaceCreateFlagsQNX value) { this->flags = std::bit_cast<VkScreenSurfaceCreateFlagsQNX>(value); }
   ScreenSurfaceCreateFlagsQNX getFlags() const { return std::bit_cast<ScreenSurfaceCreateFlagsQNX>(this->flags); }
@@ -9775,8 +9775,8 @@ struct TensorCopyARM : VkTensorCopyARM {
 struct SurfaceCreateInfoOHOS : VkSurfaceCreateInfoOHOS {
   SurfaceCreateInfoOHOS() noexcept : VkSurfaceCreateInfoOHOS{.sType = VK_STRUCTURE_TYPE_SURFACE_CREATE_INFO_OHOS} {}
 
-  void setwindow(OHNativeWindow* value) { this->window = value; }
-  OHNativeWindow* getwindow() const { return this->window; }
+  void setWindow(OHNativeWindow* value) { this->window = value; }
+  OHNativeWindow* getWindow() const { return this->window; }
 
   void setFlags(SurfaceCreateFlagsOHOS value) { this->flags = std::bit_cast<VkSurfaceCreateFlagsOHOS>(value); }
   SurfaceCreateFlagsOHOS getFlags() const { return std::bit_cast<SurfaceCreateFlagsOHOS>(this->flags); }
@@ -12201,8 +12201,8 @@ inline void MemoryAllocateInfo::attach(ImportMetalBufferInfoEXT& ext) { ext.pNex
 struct ImportScreenBufferInfoQNX : VkImportScreenBufferInfoQNX {
   ImportScreenBufferInfoQNX() noexcept : VkImportScreenBufferInfoQNX{.sType = VK_STRUCTURE_TYPE_IMPORT_SCREEN_BUFFER_INFO_QNX} {}
 
-  void setbuffer(struct _screen_buffer* value) { this->buffer = value; }
-  struct _screen_buffer* getbuffer() const { return this->buffer; }
+  void setBuffer(struct _screen_buffer* value) { this->buffer = value; }
+  struct _screen_buffer* getBuffer() const { return this->buffer; }
 };
 inline void MemoryAllocateInfo::attach(ImportScreenBufferInfoQNX& ext) { ext.pNext = const_cast<void*>(pNext); pNext = &ext; }
 #endif // VK_QNX_external_memory_screen_buffer
@@ -12211,8 +12211,8 @@ inline void MemoryAllocateInfo::attach(ImportScreenBufferInfoQNX& ext) { ext.pNe
 struct ImportAndroidHardwareBufferInfoANDROID : VkImportAndroidHardwareBufferInfoANDROID {
   ImportAndroidHardwareBufferInfoANDROID() noexcept : VkImportAndroidHardwareBufferInfoANDROID{.sType = VK_STRUCTURE_TYPE_IMPORT_ANDROID_HARDWARE_BUFFER_INFO_ANDROID} {}
 
-  void setbuffer(struct AHardwareBuffer* value) { this->buffer = value; }
-  struct AHardwareBuffer* getbuffer() const { return this->buffer; }
+  void setBuffer(struct AHardwareBuffer* value) { this->buffer = value; }
+  struct AHardwareBuffer* getBuffer() const { return this->buffer; }
 };
 inline void MemoryAllocateInfo::attach(ImportAndroidHardwareBufferInfoANDROID& ext) { ext.pNext = const_cast<void*>(pNext); pNext = &ext; }
 #endif // VK_ANDROID_external_memory_android_hardware_buffer
@@ -12233,8 +12233,8 @@ inline void MemoryAllocateInfo::attach(ImportMemoryHostPointerInfoEXT& ext) { ex
 struct ImportNativeBufferInfoOHOS : VkImportNativeBufferInfoOHOS {
   ImportNativeBufferInfoOHOS() noexcept : VkImportNativeBufferInfoOHOS{.sType = VK_STRUCTURE_TYPE_IMPORT_NATIVE_BUFFER_INFO_OHOS} {}
 
-  void setbuffer(struct OH_NativeBuffer* value) { this->buffer = value; }
-  struct OH_NativeBuffer* getbuffer() const { return this->buffer; }
+  void setBuffer(struct OH_NativeBuffer* value) { this->buffer = value; }
+  struct OH_NativeBuffer* getBuffer() const { return this->buffer; }
 };
 inline void MemoryAllocateInfo::attach(ImportNativeBufferInfoOHOS& ext) { ext.pNext = const_cast<void*>(pNext); pNext = &ext; }
 #endif // VK_OHOS_external_memory
@@ -12297,8 +12297,8 @@ struct ImportMemoryMetalHandleInfoEXT : VkImportMemoryMetalHandleInfoEXT {
 
   void setHandleType(ExternalMemoryHandleTypeFlagBits value) { this->handleType = std::bit_cast<VkExternalMemoryHandleTypeFlagBits>(value); }
   ExternalMemoryHandleTypeFlagBits getHandleType() const { return std::bit_cast<ExternalMemoryHandleTypeFlagBits>(this->handleType); }
-  void sethandle(void* value) { this->handle = value; }
-  void* gethandle() const { return this->handle; }
+  void setHandle(void* value) { this->handle = value; }
+  void* getHandle() const { return this->handle; }
 };
 inline void MemoryAllocateInfo::attach(ImportMemoryMetalHandleInfoEXT& ext) { ext.pNext = const_cast<void*>(pNext); pNext = &ext; }
 #endif // VK_EXT_external_memory_metal
@@ -15180,7 +15180,7 @@ struct DisplayPropertiesKHR : VkDisplayPropertiesKHR {
   // Handle of the display object
   DisplayKHR getDisplay() const { return std::bit_cast<DisplayKHR>(this->display); }
   // Name of the display
-  const char* getdisplayName() const { return this->displayName; }
+  const char* getDisplayName() const { return this->displayName; }
   // In millimeters?
   const Extent2D& getPhysicalDimensions() const { return static_cast<const Extent2D&>(this->physicalDimensions); }
   // Max resolution for CRT?
@@ -30651,8 +30651,8 @@ inline void DependencyInfo::attach(TensorDependencyInfoARM& ext) { ext.pNext = c
 struct OpaqueCaptureDescriptorDataCreateInfoEXT : VkOpaqueCaptureDescriptorDataCreateInfoEXT {
   OpaqueCaptureDescriptorDataCreateInfoEXT() noexcept : VkOpaqueCaptureDescriptorDataCreateInfoEXT{.sType = VK_STRUCTURE_TYPE_OPAQUE_CAPTURE_DESCRIPTOR_DATA_CREATE_INFO_EXT} {}
 
-  void setopaqueCaptureDescriptorData(const void* value) { this->opaqueCaptureDescriptorData = value; }
-  const void* getopaqueCaptureDescriptorData() const { return this->opaqueCaptureDescriptorData; }
+  void setOpaqueCaptureDescriptorData(const void* value) { this->opaqueCaptureDescriptorData = value; }
+  const void* getOpaqueCaptureDescriptorData() const { return this->opaqueCaptureDescriptorData; }
 };
 inline void BufferCreateInfo::attach(OpaqueCaptureDescriptorDataCreateInfoEXT& ext) { ext.pNext = const_cast<void*>(pNext); pNext = &ext; }
 inline void ImageCreateInfo::attach(OpaqueCaptureDescriptorDataCreateInfoEXT& ext) { ext.pNext = const_cast<void*>(pNext); pNext = &ext; }

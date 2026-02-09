@@ -610,11 +610,14 @@ struct Builder {
 
     void generateMemberName(Output& os, std::string_view name, bool isPtr) {
         if (isPtr) {
-            os << name.substr(name.find_first_not_of('p'));
-        } else {
-            os << toCapital(name[0]);
-            os << name.substr(1);
+            const auto offset = name.find_first_not_of('p');
+            if (offset != 0) {
+                os << name.substr(offset);
+                return;
+            }
         }
+        os << toCapital(name[0]);
+        os << name.substr(1);
     }
 
     VarInfo getVarInfo(const Element& elem) const {
