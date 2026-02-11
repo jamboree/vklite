@@ -733,11 +733,10 @@ namespace vklite::vma {
                 std::bit_cast<VmaAllocation>(dstAllocation),
                 dstAllocationLocalOffset, size));
         }
-        Result copyAllocationToMemory(VmaAllocator allocator,
-                                      VmaAllocation srcAllocation,
-                                      VkDeviceSize srcAllocationLocalOffset,
+        Result copyAllocationToMemory(Allocation srcAllocation,
+                                      DeviceSize srcAllocationLocalOffset,
                                       void* pDstHostPointer,
-                                      VkDeviceSize size) const {
+                                      DeviceSize size) const {
             return Result(vmaCopyAllocationToMemory(
                 handle, std::bit_cast<VmaAllocation>(srcAllocation),
                 srcAllocationLocalOffset, pDstHostPointer, size));
