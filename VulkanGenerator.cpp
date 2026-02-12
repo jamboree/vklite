@@ -94,10 +94,38 @@ bool consumeMatch(std::string_view& str, std::string_view match) {
     return false;
 }
 
+struct StringSet {
+    uint32_t getId(std::string&& str) {
+        const auto getStr = [this](uint32_t idx) -> const std::string& {
+            return m_strings[idx];
+        };
+        auto pos = std::ranges::lower_bound(m_indices, str, std::ranges::less{},
+                                            getStr);
+        if (pos == m_indices.end() || str != getStr(*pos)) {
+            pos = m_indices.insert(pos, uint32_t(m_strings.size()));
+            m_strings.push_back(std::string(str));
+        }
+        return *pos;
+    }
+
+    std::string_view getStr(uint32_t id) const { return m_strings[id]; }
+
+private:
+    std::vector<uint32_t> m_indices;
+    std::vector<std::string> m_strings;
+};
+
 struct Builder {
     enum class TypeKind { Raw, Enum, Bitmask, Alias, Struct, Handle, NUM };
 
     using TypeId = TagId<TypeKind>;
+
+    struct GuardId {
+        uint32_t value : 31 = 0;
+        uint32_t multi : 1 = 0;
+        bool operator==(const GuardId&) const = default;
+        explicit operator bool() const noexcept { return *this != GuardId{}; }
+    };
 
     struct NameMatch {
         std::string_view m_str;
@@ -147,7 +175,7 @@ struct Builder {
 
     struct EnumExtendInfo {
         const Element& m_elem;
-        StrId m_guard;
+        GuardId m_guard;
     };
 
     struct CommandInfo {
@@ -169,7 +197,7 @@ struct Builder {
     boost::unordered_flat_set<std::string_view> m_structs;
     boost::unordered_flat_set<std::string_view> m_enumOrFlag;
     boost::unordered_flat_set<std::string_view> m_scopes;
-    boost::unordered_flat_map<std::string_view, StrId> m_supported;
+    boost::unordered_flat_map<std::string_view, GuardId> m_supported;
     boost::unordered_flat_map<std::string_view, std::vector<CommandInfo>>
         m_handleCommands;
     boost::unordered_flat_map<std::string_view, std::vector<const Element*>>
@@ -184,6 +212,7 @@ struct Builder {
     std::vector<TypeInfo> m_typeInfos;
     std::vector<DefInfo> m_defInfo;
     std::vector<BitmaskInfo> m_bitmaskInfo;
+    StringSet m_multiGuardStrs;
 
     const StrId tagsTag = m_ctx.getUniqueStr("tags");
     const StrId tagTag = m_ctx.getUniqueStr("tag");
@@ -229,32 +258,51 @@ struct Builder {
 
     struct GenState {
         bool m_delim = false;
-        StrId m_guard;
+        GuardId m_guard;
     };
 
-    const StrId* findSupport(std::string_view name) const {
+    void addSupport(std::string_view name, StrId guard) {
+        const auto [it, inserted] =
+            m_supported.emplace(name, GuardId{guard.value, false});
+        if (!inserted) {
+            const auto prevStr = getGuardStr(it->second);
+            const auto newStr = m_ctx.get(guard);
+            constexpr std::string_view sep = " || ";
+            std::string str;
+            str.reserve(prevStr.size() + sep.size() + newStr.size());
+            str.append(prevStr).append(sep).append(newStr);
+            it->second = GuardId{m_multiGuardStrs.getId(std::move(str)), true};
+        }
+    }
+
+    const GuardId* findSupport(std::string_view name) const {
         const auto it = m_supported.find(name);
         if (it == m_supported.end())
             return nullptr;
         return &it->second;
     }
 
-    static StrId subGuard(StrId baseGuard, StrId guard) {
-        return guard > baseGuard ? guard : StrId{};
+    static GuardId subGuard(GuardId baseGuard, GuardId guard) {
+        return guard.multi || guard.value > baseGuard.value ? guard : GuardId{};
     }
 
-    StrId updateGuard(Output& os, StrId guard, GenState& state) {
+    std::string_view getGuardStr(GuardId guard) const {
+        return guard.multi ? m_multiGuardStrs.getStr(guard.value)
+                           : m_ctx.get(StrId{guard.value});
+    }
+
+    GuardId updateGuard(Output& os, GuardId guard, GenState& state) {
         if (guard == state.m_guard)
             return {};
         if (state.m_guard)
-            os << "#endif // " << m_ctx.get(state.m_guard) << '\n';
+            os << "#endif // " << getGuardStr(state.m_guard) << '\n';
         state.m_guard = guard;
         return guard;
     }
 
-    void generateGuard(Output& os, StrId guard) {
+    void generateGuard(Output& os, GuardId guard) {
         if (guard)
-            os << "#if " << m_ctx.get(guard) << '\n';
+            os << "#if " << getGuardStr(guard) << '\n';
     }
 
     void generate(Output& os) {
@@ -539,10 +587,10 @@ struct Builder {
             }
             prefix += '_';
         }
-        std::vector<std::pair<std::string, StrId>> resultEnums;
+        std::vector<std::pair<std::string, GuardId>> resultEnums;
         boost::unordered_flat_set<std::string_view> uniqueIds;
         GenState stateEnum;
-        const auto each = [&](const Element& elem, StrId extGuard = {}) {
+        const auto each = [&](const Element& elem, GuardId extGuard = {}) {
             const auto attrs = m_ctx.getList(elem.attrs);
             if (findAttr(attrs, deprecatedTag))
                 return;
@@ -1115,7 +1163,7 @@ struct Builder {
     }
 
     void generateCommand(Output& os, const CommandInfo& cmd,
-                         std::string_view typeName, StrId baseGuard,
+                         std::string_view typeName, GuardId baseGuard,
                          GenState& state) {
         auto name = m_ctx.get(cmd.m_name);
         if (!consumeMatch(name, "vk"))
@@ -1515,7 +1563,7 @@ struct Builder {
                             auto extends = m_ctx.get(extendsAttr);
                             if (consumeMatch(extends, "Vk")) {
                                 m_enumExtendsMap[extends].push_back(
-                                    {elem, guard});
+                                    {elem, GuardId{guard.value, false}});
                             }
                         }
                     } else if (elem.tag == typeTag) {
@@ -1523,7 +1571,7 @@ struct Builder {
                                 findAttr(m_ctx.getList(elem.attrs), nameTag)) {
                             auto name = m_ctx.get(nameAttr);
                             if (consumeMatch(name, "Vk")) {
-                                m_supported.emplace(name, guard);
+                                addSupport(name, guard);
                             }
                         }
                     } else if (elem.tag == commandTag) {
@@ -1531,7 +1579,7 @@ struct Builder {
                                 findAttr(m_ctx.getList(elem.attrs), nameTag)) {
                             auto name = m_ctx.get(nameAttr);
                             if (consumeMatch(name, "vk")) {
-                                m_supported.emplace(name, guard);
+                                addSupport(name, guard);
                             }
                         }
                     }

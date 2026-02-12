@@ -9,9 +9,9 @@ using SampleMask = VkSampleMask;
 using Bool32 = VkBool32;
 using Flags = VkFlags;
 #endif // VK_VERSION_1_0
-#if VK_VERSION_1_3
+#if VK_VERSION_1_3 || VK_KHR_synchronization2
 using Flags64 = VkFlags64;
-#endif // VK_VERSION_1_3
+#endif // VK_VERSION_1_3 || VK_KHR_synchronization2
 #if VK_VERSION_1_0
 using DeviceSize = VkDeviceSize;
 using DeviceAddress = VkDeviceAddress;
@@ -565,9 +565,11 @@ using PerformanceValueDataINTEL = VkPerformanceValueDataINTEL;
 #if VK_KHR_pipeline_executable_properties
 using PipelineExecutableStatisticValueKHR = VkPipelineExecutableStatisticValueKHR;
 #endif // VK_KHR_pipeline_executable_properties
-#if VK_KHR_acceleration_structure
+#if VK_KHR_acceleration_structure || VK_NV_cooperative_vector
 using DeviceOrHostAddressKHR = VkDeviceOrHostAddressKHR;
 using DeviceOrHostAddressConstKHR = VkDeviceOrHostAddressConstKHR;
+#endif // VK_KHR_acceleration_structure || VK_NV_cooperative_vector
+#if VK_KHR_acceleration_structure
 using AccelerationStructureGeometryDataKHR = VkAccelerationStructureGeometryDataKHR;
 
 struct AccelerationStructureBuildRangeInfoKHR : VkAccelerationStructureBuildRangeInfoKHR {
@@ -1147,7 +1149,7 @@ enum class PipelineCacheHeaderVersion : int32_t {
 };
 #endif // VK_VERSION_1_0
 
-#if VK_VERSION_1_3
+#if VK_VERSION_1_3 || VK_EXT_pipeline_creation_cache_control || VK_KHR_maintenance8
 enum class PipelineCacheCreateFlagBits : uint32_t {
 #if VK_VERSION_1_3
   bExternallySynchronized = VK_PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT,
@@ -1159,7 +1161,7 @@ enum class PipelineCacheCreateFlagBits : uint32_t {
   bInternallySynchronizedMergeKHR = VK_PIPELINE_CACHE_CREATE_INTERNALLY_SYNCHRONIZED_MERGE_BIT_KHR,
 #endif // VK_KHR_maintenance8
 };
-#endif // VK_VERSION_1_3
+#endif // VK_VERSION_1_3 || VK_EXT_pipeline_creation_cache_control || VK_KHR_maintenance8
 
 #if VK_VERSION_1_0
 enum class PrimitiveTopology : int32_t {
@@ -5985,7 +5987,7 @@ enum class MemoryAllocateFlagBits : uint32_t {
 };
 #endif // VK_VERSION_1_1
 
-#if VK_KHR_swapchain
+#if VK_KHR_swapchain || VK_KHR_device_group
 enum class DeviceGroupPresentModeFlagBitsKHR : uint32_t {
   // Present from local memory
   bLocal = VK_DEVICE_GROUP_PRESENT_MODE_LOCAL_BIT_KHR,
@@ -5996,7 +5998,9 @@ enum class DeviceGroupPresentModeFlagBitsKHR : uint32_t {
   // Each physical device presents from local memory
   bLocalMultiDevice = VK_DEVICE_GROUP_PRESENT_MODE_LOCAL_MULTI_DEVICE_BIT_KHR,
 };
+#endif // VK_KHR_swapchain || VK_KHR_device_group
 
+#if VK_KHR_swapchain
 enum class SwapchainCreateFlagBitsKHR : uint32_t {
 #if VK_KHR_swapchain
   // Allow images with VK_IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT
@@ -7795,7 +7799,7 @@ enum class ScopeKHR : int32_t {
 };
 #endif // VK_KHR_cooperative_matrix
 
-#if VK_NV_cooperative_vector
+#if VK_NV_cooperative_vector || VK_KHR_cooperative_matrix
 enum class ComponentTypeKHR : int32_t {
   eFloat16 = VK_COMPONENT_TYPE_FLOAT16_KHR,
   eFloat32 = VK_COMPONENT_TYPE_FLOAT32_KHR,
@@ -7832,7 +7836,7 @@ enum class ComponentTypeKHR : int32_t {
   eFloat8E5M2EXT = VK_COMPONENT_TYPE_FLOAT8_E5M2_EXT,
 #endif // VK_EXT_shader_float8
 };
-#endif // VK_NV_cooperative_vector
+#endif // VK_NV_cooperative_vector || VK_KHR_cooperative_matrix
 
 #if VK_QCOM_filter_cubic_weights
 enum class CubicFilterWeightsQCOM : int32_t {
@@ -8712,7 +8716,7 @@ struct BindIndexBufferIndirectCommandEXT : VkBindIndexBufferIndirectCommandEXT {
 };
 #endif // VK_EXT_device_generated_commands
 
-#if VK_EXT_extended_dynamic_state3
+#if VK_EXT_extended_dynamic_state3 || VK_EXT_shader_object
 struct ColorBlendEquationEXT : VkColorBlendEquationEXT {
   ColorBlendEquationEXT() noexcept : VkColorBlendEquationEXT{} {}
   ColorBlendEquationEXT(BlendFactor srcColorBlendFactor, BlendFactor dstColorBlendFactor, BlendOp colorBlendOp, BlendFactor srcAlphaBlendFactor, BlendFactor dstAlphaBlendFactor, BlendOp alphaBlendOp) noexcept : VkColorBlendEquationEXT{.srcColorBlendFactor = std::bit_cast<VkBlendFactor>(srcColorBlendFactor), .dstColorBlendFactor = std::bit_cast<VkBlendFactor>(dstColorBlendFactor), .colorBlendOp = std::bit_cast<VkBlendOp>(colorBlendOp), .srcAlphaBlendFactor = std::bit_cast<VkBlendFactor>(srcAlphaBlendFactor), .dstAlphaBlendFactor = std::bit_cast<VkBlendFactor>(dstAlphaBlendFactor), .alphaBlendOp = std::bit_cast<VkBlendOp>(alphaBlendOp)} {}
@@ -8730,7 +8734,7 @@ struct ColorBlendEquationEXT : VkColorBlendEquationEXT {
   void setAlphaBlendOp(BlendOp value) { this->alphaBlendOp = std::bit_cast<VkBlendOp>(value); }
   BlendOp getAlphaBlendOp() const { return std::bit_cast<BlendOp>(this->alphaBlendOp); }
 };
-#endif // VK_EXT_extended_dynamic_state3
+#endif // VK_EXT_extended_dynamic_state3 || VK_EXT_shader_object
 
 #if VK_VERSION_1_0
 struct StencilOpState : VkStencilOpState {
@@ -9370,7 +9374,7 @@ struct PipelineCreateInfoKHR : VkPipelineCreateInfoKHR {
 };
 #endif // VK_KHR_pipeline_binary
 
-#if VK_EXT_vertex_input_dynamic_state
+#if VK_EXT_vertex_input_dynamic_state || VK_EXT_shader_object
 struct VertexInputBindingDescription2EXT : VkVertexInputBindingDescription2EXT {
   VertexInputBindingDescription2EXT() noexcept : VkVertexInputBindingDescription2EXT{.sType = VK_STRUCTURE_TYPE_VERTEX_INPUT_BINDING_DESCRIPTION_2_EXT} {}
 
@@ -9400,7 +9404,7 @@ struct VertexInputAttributeDescription2EXT : VkVertexInputAttributeDescription2E
   void setOffset(uint32_t value) { this->offset = value; }
   uint32_t getOffset() const { return this->offset; }
 };
-#endif // VK_EXT_vertex_input_dynamic_state
+#endif // VK_EXT_vertex_input_dynamic_state || VK_EXT_shader_object
 
 #if VK_KHR_video_queue
 struct VideoSessionParametersUpdateInfoKHR : VkVideoSessionParametersUpdateInfoKHR {
@@ -10088,9 +10092,9 @@ struct MicromapEXT : Handle<VkMicromapEXT, ObjectType::eMicromapEXT> {};
 #if VK_EXT_shader_object
 struct ShaderEXT : Handle<VkShaderEXT, ObjectType::eShaderEXT> {};
 #endif // VK_EXT_shader_object
-#if VK_EXT_descriptor_heap
+#if VK_EXT_descriptor_heap || VK_ARM_tensors
 struct TensorARM : Handle<VkTensorARM, ObjectType::eTensorARM> {};
-#endif // VK_EXT_descriptor_heap
+#endif // VK_EXT_descriptor_heap || VK_ARM_tensors
 #if VK_ARM_tensors
 struct TensorViewARM : Handle<VkTensorViewARM, ObjectType::eTensorViewARM> {};
 #endif // VK_ARM_tensors
@@ -10627,10 +10631,12 @@ constexpr MemoryAllocateFlags operator|(MemoryAllocateFlagBits a, MemoryAllocate
 using MemoryAllocateFlagBitsKHR = MemoryAllocateFlagBits;
 #endif // VK_KHR_device_group
 
-#if VK_KHR_swapchain
+#if VK_KHR_swapchain || VK_KHR_device_group
 using DeviceGroupPresentModeFlagsKHR = FlagSet<DeviceGroupPresentModeFlagBitsKHR, Flags>;
 constexpr DeviceGroupPresentModeFlagsKHR operator|(DeviceGroupPresentModeFlagBitsKHR a, DeviceGroupPresentModeFlagBitsKHR b) noexcept { return DeviceGroupPresentModeFlagsKHR(Flags(a) | Flags(b)); }
+#endif // VK_KHR_swapchain || VK_KHR_device_group
 
+#if VK_KHR_swapchain
 using SwapchainCreateFlagsKHR = FlagSet<SwapchainCreateFlagBitsKHR, Flags>;
 constexpr SwapchainCreateFlagsKHR operator|(SwapchainCreateFlagBitsKHR a, SwapchainCreateFlagBitsKHR b) noexcept { return SwapchainCreateFlagsKHR(Flags(a) | Flags(b)); }
 #endif // VK_KHR_swapchain
@@ -10671,7 +10677,7 @@ using SamplerYcbcrRangeKHR = SamplerYcbcrRange;
 using ChromaLocationKHR = ChromaLocation;
 #endif // VK_KHR_sampler_ycbcr_conversion
 
-#if VK_EXT_extended_dynamic_state3
+#if VK_EXT_extended_dynamic_state3 || VK_EXT_shader_object
 struct ColorBlendAdvancedEXT : VkColorBlendAdvancedEXT {
   ColorBlendAdvancedEXT() noexcept : VkColorBlendAdvancedEXT{} {}
 
@@ -10687,7 +10693,7 @@ struct ColorBlendAdvancedEXT : VkColorBlendAdvancedEXT {
   void setClampResults(Bool32 value) { this->clampResults = value; }
   Bool32 getClampResults() const { return this->clampResults; }
 };
-#endif // VK_EXT_extended_dynamic_state3
+#endif // VK_EXT_extended_dynamic_state3 || VK_EXT_shader_object
 
 #if VK_KHR_global_priority
 using QueueGlobalPriorityKHR = QueueGlobalPriority;
@@ -11474,10 +11480,10 @@ using TensorUsageFlagsARM = FlagSet<TensorUsageFlagBitsARM, Flags64>;
 constexpr TensorUsageFlagsARM operator|(TensorUsageFlagBitsARM a, TensorUsageFlagBitsARM b) noexcept { return TensorUsageFlagsARM(Flags64(a) | Flags64(b)); }
 #endif // VK_ARM_tensors
 
-#if VK_EXT_descriptor_heap
+#if VK_EXT_descriptor_heap || VK_ARM_tensors
 using TensorViewCreateFlagsARM = FlagSet<TensorViewCreateFlagBitsARM, Flags64>;
 constexpr TensorViewCreateFlagsARM operator|(TensorViewCreateFlagBitsARM a, TensorViewCreateFlagBitsARM b) noexcept { return TensorViewCreateFlagsARM(Flags64(a) | Flags64(b)); }
-#endif // VK_EXT_descriptor_heap
+#endif // VK_EXT_descriptor_heap || VK_ARM_tensors
 
 #if VK_ARM_data_graph
 using DataGraphPipelineSessionCreateFlagsARM = FlagSet<DataGraphPipelineSessionCreateFlagBitsARM, Flags64>;
@@ -12601,9 +12607,9 @@ struct BindImageMemoryInfo : VkBindImageMemoryInfo {
   DeviceSize getMemoryOffset() const { return this->memoryOffset; }
 
   void attach(struct BindImageMemoryDeviceGroupInfo&);
-#if VK_KHR_swapchain
+#if VK_KHR_swapchain || VK_KHR_device_group
   void attach(struct BindImageMemorySwapchainInfoKHR&);
-#endif // VK_KHR_swapchain
+#endif // VK_KHR_swapchain || VK_KHR_device_group
   void attach(struct BindImagePlaneMemoryInfo&);
 #if VK_VERSION_1_4
   void attach(struct BindMemoryStatus&);
@@ -13466,7 +13472,7 @@ struct ReleaseSwapchainImagesInfoKHR : VkReleaseSwapchainImagesInfoKHR {
 };
 #endif // VK_KHR_swapchain_maintenance1
 
-#if VK_KHR_swapchain
+#if VK_KHR_swapchain || VK_KHR_device_group
 struct AcquireNextImageInfoKHR : VkAcquireNextImageInfoKHR {
   AcquireNextImageInfoKHR() noexcept : VkAcquireNextImageInfoKHR{.sType = VK_STRUCTURE_TYPE_ACQUIRE_NEXT_IMAGE_INFO_KHR} {}
 
@@ -13482,7 +13488,9 @@ struct AcquireNextImageInfoKHR : VkAcquireNextImageInfoKHR {
   void setFence(Fence value) { this->fence = std::bit_cast<VkFence>(value); }
   Fence getFence() const { return std::bit_cast<Fence>(this->fence); }
 };
+#endif // VK_KHR_swapchain || VK_KHR_device_group
 
+#if VK_KHR_swapchain
 struct PresentInfoKHR : VkPresentInfoKHR {
   PresentInfoKHR() noexcept : VkPresentInfoKHR{.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR} {}
 
@@ -13512,7 +13520,9 @@ struct PresentInfoKHR : VkPresentInfoKHR {
 #if VK_KHR_incremental_present
   void attach(struct PresentRegionsKHR&);
 #endif // VK_KHR_incremental_present
+#if VK_KHR_swapchain || VK_KHR_device_group
   void attach(struct DeviceGroupPresentInfoKHR&);
+#endif // VK_KHR_swapchain || VK_KHR_device_group
 #if VK_KHR_present_id
   void attach(struct PresentIdKHR&);
 #endif // VK_KHR_present_id
@@ -14149,9 +14159,9 @@ struct ImageCreateInfo : VkImageCreateInfo {
 #if VK_VERSION_1_1
   void attach(struct ExternalMemoryImageCreateInfo&);
 #endif // VK_VERSION_1_1
-#if VK_KHR_swapchain
+#if VK_KHR_swapchain || VK_KHR_device_group
   void attach(struct ImageSwapchainCreateInfoKHR&);
-#endif // VK_KHR_swapchain
+#endif // VK_KHR_swapchain || VK_KHR_device_group
 #if VK_VERSION_1_2
   void attach(struct ImageFormatListCreateInfo&);
 #endif // VK_VERSION_1_2
@@ -15558,14 +15568,16 @@ struct MemoryAllocateFlagsInfo : VkMemoryAllocateFlagsInfo {
 inline void MemoryAllocateInfo::attach(MemoryAllocateFlagsInfo& ext) { ext.pNext = const_cast<void*>(pNext); pNext = &ext; }
 #endif // VK_VERSION_1_1
 
-#if VK_KHR_swapchain
+#if VK_KHR_swapchain || VK_KHR_device_group
 struct DeviceGroupPresentCapabilitiesKHR : VkDeviceGroupPresentCapabilitiesKHR {
   DeviceGroupPresentCapabilitiesKHR() noexcept : VkDeviceGroupPresentCapabilitiesKHR{.sType = VK_STRUCTURE_TYPE_DEVICE_GROUP_PRESENT_CAPABILITIES_KHR} {}
 
   std::span<const uint32_t, VK_MAX_DEVICE_GROUP_SIZE> getPresentMask() const { return this->presentMask; }
   DeviceGroupPresentModeFlagsKHR getModes() const { return std::bit_cast<DeviceGroupPresentModeFlagsKHR>(this->modes); }
 };
+#endif // VK_KHR_swapchain || VK_KHR_device_group
 
+#if VK_KHR_swapchain
 struct SwapchainCreateInfoKHR : VkSwapchainCreateInfoKHR {
   SwapchainCreateInfoKHR() noexcept : VkSwapchainCreateInfoKHR{.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR} {}
 
@@ -15621,7 +15633,9 @@ struct SwapchainCreateInfoKHR : VkSwapchainCreateInfoKHR {
 #if VK_EXT_display_control
   void attach(struct SwapchainCounterCreateInfoEXT&);
 #endif // VK_EXT_display_control
+#if VK_KHR_swapchain || VK_KHR_device_group
   void attach(struct DeviceGroupSwapchainCreateInfoKHR&);
+#endif // VK_KHR_swapchain || VK_KHR_device_group
 #if VK_AMD_display_native_hdr
   void attach(struct SwapchainDisplayNativeHdrCreateInfoAMD&);
 #endif // VK_AMD_display_native_hdr
@@ -16583,7 +16597,7 @@ inline void DataGraphPipelineConstantARM::attach(TensorDescriptionARM& ext) { ex
 #endif // VK_ARM_data_graph
 #endif // VK_ARM_tensors
 
-#if VK_EXT_descriptor_heap
+#if VK_EXT_descriptor_heap || VK_ARM_tensors
 struct TensorViewCreateInfoARM : VkTensorViewCreateInfoARM {
   TensorViewCreateInfoARM() noexcept : VkTensorViewCreateInfoARM{.sType = VK_STRUCTURE_TYPE_TENSOR_VIEW_CREATE_INFO_ARM} {}
 
@@ -16599,7 +16613,7 @@ struct TensorViewCreateInfoARM : VkTensorViewCreateInfoARM {
   void attach(struct OpaqueCaptureDescriptorDataCreateInfoEXT&);
 #endif // VK_EXT_descriptor_buffer
 };
-#endif // VK_EXT_descriptor_heap
+#endif // VK_EXT_descriptor_heap || VK_ARM_tensors
 
 #if VK_ARM_data_graph
 struct DataGraphPipelineSessionCreateInfoARM : VkDataGraphPipelineSessionCreateInfoARM {
@@ -16689,9 +16703,9 @@ inline void SubresourceLayout2::attach(SubresourceHostMemcpySize& ext) { ext.pNe
 #if VK_KHR_maintenance5
 using SubresourceLayout2KHR = SubresourceLayout2;
 #endif // VK_KHR_maintenance5
-#if VK_EXT_host_image_copy
+#if VK_EXT_host_image_copy || VK_EXT_image_compression_control
 using SubresourceLayout2EXT = SubresourceLayout2;
-#endif // VK_EXT_host_image_copy
+#endif // VK_EXT_host_image_copy || VK_EXT_image_compression_control
 
 #if VK_EXT_depth_clip_control
 struct PipelineViewportDepthClipControlCreateInfoEXT : VkPipelineViewportDepthClipControlCreateInfoEXT {
@@ -16941,7 +16955,7 @@ struct BindImageMemoryDeviceGroupInfo : VkBindImageMemoryDeviceGroupInfo {
 inline void BindImageMemoryInfo::attach(BindImageMemoryDeviceGroupInfo& ext) { ext.pNext = const_cast<void*>(pNext); pNext = &ext; }
 #endif // VK_VERSION_1_1
 
-#if VK_KHR_swapchain
+#if VK_KHR_swapchain || VK_KHR_device_group
 struct BindImageMemorySwapchainInfoKHR : VkBindImageMemorySwapchainInfoKHR {
   BindImageMemorySwapchainInfoKHR() noexcept : VkBindImageMemorySwapchainInfoKHR{.sType = VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_SWAPCHAIN_INFO_KHR} {}
 
@@ -16950,8 +16964,10 @@ struct BindImageMemorySwapchainInfoKHR : VkBindImageMemorySwapchainInfoKHR {
   void setImageIndex(uint32_t value) { this->imageIndex = value; }
   uint32_t getImageIndex() const { return this->imageIndex; }
 };
+#if VK_VERSION_1_1
 inline void BindImageMemoryInfo::attach(BindImageMemorySwapchainInfoKHR& ext) { ext.pNext = const_cast<void*>(pNext); pNext = &ext; }
-#endif // VK_KHR_swapchain
+#endif // VK_VERSION_1_1
+#endif // VK_KHR_swapchain || VK_KHR_device_group
 
 #if VK_KHR_get_memory_requirements2
 using ImageSparseMemoryRequirementsInfo2KHR = ImageSparseMemoryRequirementsInfo2;
@@ -17288,7 +17304,7 @@ struct PresentRegionsKHR : VkPresentRegionsKHR {
 inline void PresentInfoKHR::attach(PresentRegionsKHR& ext) { ext.pNext = const_cast<void*>(pNext); pNext = &ext; }
 #endif // VK_KHR_incremental_present
 
-#if VK_KHR_swapchain
+#if VK_KHR_swapchain || VK_KHR_device_group
 struct DeviceGroupPresentInfoKHR : VkDeviceGroupPresentInfoKHR {
   DeviceGroupPresentInfoKHR() noexcept : VkDeviceGroupPresentInfoKHR{.sType = VK_STRUCTURE_TYPE_DEVICE_GROUP_PRESENT_INFO_KHR} {}
 
@@ -17300,8 +17316,10 @@ struct DeviceGroupPresentInfoKHR : VkDeviceGroupPresentInfoKHR {
   void setDeviceMasks(const uint32_t* value) { this->pDeviceMasks = value; }
   const uint32_t* getDeviceMasks() const { return this->pDeviceMasks; }
 };
+#if VK_KHR_swapchain
 inline void PresentInfoKHR::attach(DeviceGroupPresentInfoKHR& ext) { ext.pNext = const_cast<void*>(pNext); pNext = &ext; }
 #endif // VK_KHR_swapchain
+#endif // VK_KHR_swapchain || VK_KHR_device_group
 
 #if VK_KHR_present_id2
 struct PresentId2KHR : VkPresentId2KHR {
@@ -18573,15 +18591,17 @@ struct ImageDrmFormatModifierExplicitCreateInfoEXT : VkImageDrmFormatModifierExp
 inline void ImageCreateInfo::attach(ImageDrmFormatModifierExplicitCreateInfoEXT& ext) { ext.pNext = const_cast<void*>(pNext); pNext = &ext; }
 #endif // VK_EXT_image_drm_format_modifier
 
-#if VK_KHR_swapchain
+#if VK_KHR_swapchain || VK_KHR_device_group
 struct ImageSwapchainCreateInfoKHR : VkImageSwapchainCreateInfoKHR {
   ImageSwapchainCreateInfoKHR() noexcept : VkImageSwapchainCreateInfoKHR{.sType = VK_STRUCTURE_TYPE_IMAGE_SWAPCHAIN_CREATE_INFO_KHR} {}
 
   void setSwapchain(SwapchainKHR value) { this->swapchain = std::bit_cast<VkSwapchainKHR>(value); }
   SwapchainKHR getSwapchain() const { return std::bit_cast<SwapchainKHR>(this->swapchain); }
 };
+#if VK_VERSION_1_0
 inline void ImageCreateInfo::attach(ImageSwapchainCreateInfoKHR& ext) { ext.pNext = const_cast<void*>(pNext); pNext = &ext; }
-#endif // VK_KHR_swapchain
+#endif // VK_VERSION_1_0
+#endif // VK_KHR_swapchain || VK_KHR_device_group
 
 #if VK_EXT_metal_objects
 struct ImportMetalTextureInfoEXT : VkImportMetalTextureInfoEXT {
@@ -19969,15 +19989,17 @@ struct SwapchainCounterCreateInfoEXT : VkSwapchainCounterCreateInfoEXT {
 inline void SwapchainCreateInfoKHR::attach(SwapchainCounterCreateInfoEXT& ext) { ext.pNext = const_cast<void*>(pNext); pNext = &ext; }
 #endif // VK_EXT_display_control
 
-#if VK_KHR_swapchain
+#if VK_KHR_swapchain || VK_KHR_device_group
 struct DeviceGroupSwapchainCreateInfoKHR : VkDeviceGroupSwapchainCreateInfoKHR {
   DeviceGroupSwapchainCreateInfoKHR() noexcept : VkDeviceGroupSwapchainCreateInfoKHR{.sType = VK_STRUCTURE_TYPE_DEVICE_GROUP_SWAPCHAIN_CREATE_INFO_KHR} {}
 
   void setModes(DeviceGroupPresentModeFlagsKHR value) { this->modes = std::bit_cast<VkDeviceGroupPresentModeFlagsKHR>(value); }
   DeviceGroupPresentModeFlagsKHR getModes() const { return std::bit_cast<DeviceGroupPresentModeFlagsKHR>(this->modes); }
 };
+#if VK_KHR_swapchain
 inline void SwapchainCreateInfoKHR::attach(DeviceGroupSwapchainCreateInfoKHR& ext) { ext.pNext = const_cast<void*>(pNext); pNext = &ext; }
 #endif // VK_KHR_swapchain
+#endif // VK_KHR_swapchain || VK_KHR_device_group
 
 #if VK_NV_present_barrier
 struct SwapchainPresentBarrierCreateInfoNV : VkSwapchainPresentBarrierCreateInfoNV {
@@ -20997,9 +21019,9 @@ inline void RenderingInfo::attach(DeviceGroupRenderPassBeginInfo& ext) { ext.pNe
 #endif // VK_VERSION_1_3
 #endif // VK_VERSION_1_1
 
-#if VK_KHR_dynamic_rendering
+#if VK_KHR_dynamic_rendering || VK_QCOM_tile_properties
 using RenderingInfoKHR = RenderingInfo;
-#endif // VK_KHR_dynamic_rendering
+#endif // VK_KHR_dynamic_rendering || VK_QCOM_tile_properties
 
 #if VK_KHR_fragment_shading_rate
 struct RenderingFragmentShadingRateAttachmentInfoKHR : VkRenderingFragmentShadingRateAttachmentInfoKHR {
@@ -22560,9 +22582,9 @@ using AttachmentReferenceStencilLayoutKHR = AttachmentReferenceStencilLayout;
 #if VK_KHR_maintenance5
 using ImageSubresource2KHR = ImageSubresource2;
 #endif // VK_KHR_maintenance5
-#if VK_EXT_host_image_copy
+#if VK_EXT_host_image_copy || VK_EXT_image_compression_control
 using ImageSubresource2EXT = ImageSubresource2;
-#endif // VK_EXT_host_image_copy
+#endif // VK_EXT_host_image_copy || VK_EXT_image_compression_control
 
 #if VK_VERSION_1_4
 struct DeviceImageSubresourceInfo : VkDeviceImageSubresourceInfo {
@@ -30129,33 +30151,33 @@ struct CommandBuffer : Handle<VkCommandBuffer, ObjectType::eCommandBuffer> {
 #if VK_VERSION_1_3
   void cmdSetCullMode(CullModeFlags cullMode = {}) const { vkCmdSetCullMode(this->handle, std::bit_cast<VkCullModeFlags>(cullMode)); }
 #endif // VK_VERSION_1_3
-#if VK_EXT_extended_dynamic_state
+#if VK_EXT_extended_dynamic_state || VK_EXT_shader_object
   void cmdSetCullModeEXT(CullModeFlags cullMode = {}) const { vkCmdSetCullModeEXT(this->handle, std::bit_cast<VkCullModeFlags>(cullMode)); }
-#endif // VK_EXT_extended_dynamic_state
+#endif // VK_EXT_extended_dynamic_state || VK_EXT_shader_object
 #if VK_VERSION_1_3
   void cmdSetFrontFace(FrontFace frontFace) const { vkCmdSetFrontFace(this->handle, std::bit_cast<VkFrontFace>(frontFace)); }
 #endif // VK_VERSION_1_3
-#if VK_EXT_extended_dynamic_state
+#if VK_EXT_extended_dynamic_state || VK_EXT_shader_object
   void cmdSetFrontFaceEXT(FrontFace frontFace) const { vkCmdSetFrontFaceEXT(this->handle, std::bit_cast<VkFrontFace>(frontFace)); }
-#endif // VK_EXT_extended_dynamic_state
+#endif // VK_EXT_extended_dynamic_state || VK_EXT_shader_object
 #if VK_VERSION_1_3
   void cmdSetPrimitiveTopology(PrimitiveTopology primitiveTopology) const { vkCmdSetPrimitiveTopology(this->handle, std::bit_cast<VkPrimitiveTopology>(primitiveTopology)); }
 #endif // VK_VERSION_1_3
-#if VK_EXT_extended_dynamic_state
+#if VK_EXT_extended_dynamic_state || VK_EXT_shader_object
   void cmdSetPrimitiveTopologyEXT(PrimitiveTopology primitiveTopology) const { vkCmdSetPrimitiveTopologyEXT(this->handle, std::bit_cast<VkPrimitiveTopology>(primitiveTopology)); }
-#endif // VK_EXT_extended_dynamic_state
+#endif // VK_EXT_extended_dynamic_state || VK_EXT_shader_object
 #if VK_VERSION_1_3
   void cmdSetViewportWithCount(uint32_t viewportCount, const Viewport* pViewports) const { vkCmdSetViewportWithCount(this->handle, viewportCount, std::bit_cast<const VkViewport*>(pViewports)); }
 #endif // VK_VERSION_1_3
-#if VK_EXT_extended_dynamic_state
+#if VK_EXT_extended_dynamic_state || VK_EXT_shader_object
   void cmdSetViewportWithCountEXT(uint32_t viewportCount, const Viewport* pViewports) const { vkCmdSetViewportWithCountEXT(this->handle, viewportCount, std::bit_cast<const VkViewport*>(pViewports)); }
-#endif // VK_EXT_extended_dynamic_state
+#endif // VK_EXT_extended_dynamic_state || VK_EXT_shader_object
 #if VK_VERSION_1_3
   void cmdSetScissorWithCount(uint32_t scissorCount, const Rect2D* pScissors) const { vkCmdSetScissorWithCount(this->handle, scissorCount, std::bit_cast<const VkRect2D*>(pScissors)); }
 #endif // VK_VERSION_1_3
-#if VK_EXT_extended_dynamic_state
+#if VK_EXT_extended_dynamic_state || VK_EXT_shader_object
   void cmdSetScissorWithCountEXT(uint32_t scissorCount, const Rect2D* pScissors) const { vkCmdSetScissorWithCountEXT(this->handle, scissorCount, std::bit_cast<const VkRect2D*>(pScissors)); }
-#endif // VK_EXT_extended_dynamic_state
+#endif // VK_EXT_extended_dynamic_state || VK_EXT_shader_object
 #if VK_VERSION_1_4
   void cmdBindIndexBuffer2(Buffer buffer, DeviceSize offset, DeviceSize size, IndexType indexType) const { vkCmdBindIndexBuffer2(this->handle, std::bit_cast<VkBuffer>(buffer), offset, size, std::bit_cast<VkIndexType>(indexType)); }
 #endif // VK_VERSION_1_4
@@ -30165,68 +30187,68 @@ struct CommandBuffer : Handle<VkCommandBuffer, ObjectType::eCommandBuffer> {
 #if VK_VERSION_1_3
   void cmdBindVertexBuffers2(uint32_t firstBinding, uint32_t bindingCount, const Buffer* pBuffers, const DeviceSize* pOffsets, const DeviceSize* pSizes = {}, const DeviceSize* pStrides = {}) const { vkCmdBindVertexBuffers2(this->handle, firstBinding, bindingCount, std::bit_cast<const VkBuffer*>(pBuffers), pOffsets, pSizes, pStrides); }
 #endif // VK_VERSION_1_3
-#if VK_EXT_extended_dynamic_state
+#if VK_EXT_extended_dynamic_state || VK_EXT_shader_object
   void cmdBindVertexBuffers2EXT(uint32_t firstBinding, uint32_t bindingCount, const Buffer* pBuffers, const DeviceSize* pOffsets, const DeviceSize* pSizes = {}, const DeviceSize* pStrides = {}) const { vkCmdBindVertexBuffers2EXT(this->handle, firstBinding, bindingCount, std::bit_cast<const VkBuffer*>(pBuffers), pOffsets, pSizes, pStrides); }
-#endif // VK_EXT_extended_dynamic_state
+#endif // VK_EXT_extended_dynamic_state || VK_EXT_shader_object
 #if VK_VERSION_1_3
   void cmdSetDepthTestEnable(Bool32 depthTestEnable) const { vkCmdSetDepthTestEnable(this->handle, depthTestEnable); }
 #endif // VK_VERSION_1_3
-#if VK_EXT_extended_dynamic_state
+#if VK_EXT_extended_dynamic_state || VK_EXT_shader_object
   void cmdSetDepthTestEnableEXT(Bool32 depthTestEnable) const { vkCmdSetDepthTestEnableEXT(this->handle, depthTestEnable); }
-#endif // VK_EXT_extended_dynamic_state
+#endif // VK_EXT_extended_dynamic_state || VK_EXT_shader_object
 #if VK_VERSION_1_3
   void cmdSetDepthWriteEnable(Bool32 depthWriteEnable) const { vkCmdSetDepthWriteEnable(this->handle, depthWriteEnable); }
 #endif // VK_VERSION_1_3
-#if VK_EXT_extended_dynamic_state
+#if VK_EXT_extended_dynamic_state || VK_EXT_shader_object
   void cmdSetDepthWriteEnableEXT(Bool32 depthWriteEnable) const { vkCmdSetDepthWriteEnableEXT(this->handle, depthWriteEnable); }
-#endif // VK_EXT_extended_dynamic_state
+#endif // VK_EXT_extended_dynamic_state || VK_EXT_shader_object
 #if VK_VERSION_1_3
   void cmdSetDepthCompareOp(CompareOp depthCompareOp) const { vkCmdSetDepthCompareOp(this->handle, std::bit_cast<VkCompareOp>(depthCompareOp)); }
 #endif // VK_VERSION_1_3
-#if VK_EXT_extended_dynamic_state
+#if VK_EXT_extended_dynamic_state || VK_EXT_shader_object
   void cmdSetDepthCompareOpEXT(CompareOp depthCompareOp) const { vkCmdSetDepthCompareOpEXT(this->handle, std::bit_cast<VkCompareOp>(depthCompareOp)); }
-#endif // VK_EXT_extended_dynamic_state
+#endif // VK_EXT_extended_dynamic_state || VK_EXT_shader_object
 #if VK_VERSION_1_3
   void cmdSetDepthBoundsTestEnable(Bool32 depthBoundsTestEnable) const { vkCmdSetDepthBoundsTestEnable(this->handle, depthBoundsTestEnable); }
 #endif // VK_VERSION_1_3
-#if VK_EXT_extended_dynamic_state
+#if VK_EXT_extended_dynamic_state || VK_EXT_shader_object
   void cmdSetDepthBoundsTestEnableEXT(Bool32 depthBoundsTestEnable) const { vkCmdSetDepthBoundsTestEnableEXT(this->handle, depthBoundsTestEnable); }
-#endif // VK_EXT_extended_dynamic_state
+#endif // VK_EXT_extended_dynamic_state || VK_EXT_shader_object
 #if VK_VERSION_1_3
   void cmdSetStencilTestEnable(Bool32 stencilTestEnable) const { vkCmdSetStencilTestEnable(this->handle, stencilTestEnable); }
 #endif // VK_VERSION_1_3
-#if VK_EXT_extended_dynamic_state
+#if VK_EXT_extended_dynamic_state || VK_EXT_shader_object
   void cmdSetStencilTestEnableEXT(Bool32 stencilTestEnable) const { vkCmdSetStencilTestEnableEXT(this->handle, stencilTestEnable); }
-#endif // VK_EXT_extended_dynamic_state
+#endif // VK_EXT_extended_dynamic_state || VK_EXT_shader_object
 #if VK_VERSION_1_3
   void cmdSetStencilOp(StencilFaceFlags faceMask, StencilOp failOp, StencilOp passOp, StencilOp depthFailOp, CompareOp compareOp) const { vkCmdSetStencilOp(this->handle, std::bit_cast<VkStencilFaceFlags>(faceMask), std::bit_cast<VkStencilOp>(failOp), std::bit_cast<VkStencilOp>(passOp), std::bit_cast<VkStencilOp>(depthFailOp), std::bit_cast<VkCompareOp>(compareOp)); }
 #endif // VK_VERSION_1_3
-#if VK_EXT_extended_dynamic_state
+#if VK_EXT_extended_dynamic_state || VK_EXT_shader_object
   void cmdSetStencilOpEXT(StencilFaceFlags faceMask, StencilOp failOp, StencilOp passOp, StencilOp depthFailOp, CompareOp compareOp) const { vkCmdSetStencilOpEXT(this->handle, std::bit_cast<VkStencilFaceFlags>(faceMask), std::bit_cast<VkStencilOp>(failOp), std::bit_cast<VkStencilOp>(passOp), std::bit_cast<VkStencilOp>(depthFailOp), std::bit_cast<VkCompareOp>(compareOp)); }
-#endif // VK_EXT_extended_dynamic_state
-#if VK_EXT_extended_dynamic_state2
+#endif // VK_EXT_extended_dynamic_state || VK_EXT_shader_object
+#if VK_EXT_extended_dynamic_state2 || VK_EXT_shader_object
   void cmdSetPatchControlPointsEXT(uint32_t patchControlPoints) const { vkCmdSetPatchControlPointsEXT(this->handle, patchControlPoints); }
-#endif // VK_EXT_extended_dynamic_state2
+#endif // VK_EXT_extended_dynamic_state2 || VK_EXT_shader_object
 #if VK_VERSION_1_3
   void cmdSetRasterizerDiscardEnable(Bool32 rasterizerDiscardEnable) const { vkCmdSetRasterizerDiscardEnable(this->handle, rasterizerDiscardEnable); }
 #endif // VK_VERSION_1_3
-#if VK_EXT_extended_dynamic_state2
+#if VK_EXT_extended_dynamic_state2 || VK_EXT_shader_object
   void cmdSetRasterizerDiscardEnableEXT(Bool32 rasterizerDiscardEnable) const { vkCmdSetRasterizerDiscardEnableEXT(this->handle, rasterizerDiscardEnable); }
-#endif // VK_EXT_extended_dynamic_state2
+#endif // VK_EXT_extended_dynamic_state2 || VK_EXT_shader_object
 #if VK_VERSION_1_3
   void cmdSetDepthBiasEnable(Bool32 depthBiasEnable) const { vkCmdSetDepthBiasEnable(this->handle, depthBiasEnable); }
 #endif // VK_VERSION_1_3
-#if VK_EXT_extended_dynamic_state2
+#if VK_EXT_extended_dynamic_state2 || VK_EXT_shader_object
   void cmdSetDepthBiasEnableEXT(Bool32 depthBiasEnable) const { vkCmdSetDepthBiasEnableEXT(this->handle, depthBiasEnable); }
   void cmdSetLogicOpEXT(LogicOp logicOp) const { vkCmdSetLogicOpEXT(this->handle, std::bit_cast<VkLogicOp>(logicOp)); }
-#endif // VK_EXT_extended_dynamic_state2
+#endif // VK_EXT_extended_dynamic_state2 || VK_EXT_shader_object
 #if VK_VERSION_1_3
   void cmdSetPrimitiveRestartEnable(Bool32 primitiveRestartEnable) const { vkCmdSetPrimitiveRestartEnable(this->handle, primitiveRestartEnable); }
 #endif // VK_VERSION_1_3
-#if VK_EXT_extended_dynamic_state2
+#if VK_EXT_extended_dynamic_state2 || VK_EXT_shader_object
   void cmdSetPrimitiveRestartEnableEXT(Bool32 primitiveRestartEnable) const { vkCmdSetPrimitiveRestartEnableEXT(this->handle, primitiveRestartEnable); }
-#endif // VK_EXT_extended_dynamic_state2
-#if VK_EXT_extended_dynamic_state3
+#endif // VK_EXT_extended_dynamic_state2 || VK_EXT_shader_object
+#if VK_EXT_extended_dynamic_state3 || VK_EXT_shader_object
   void cmdSetTessellationDomainOriginEXT(TessellationDomainOrigin domainOrigin) const { vkCmdSetTessellationDomainOriginEXT(this->handle, std::bit_cast<VkTessellationDomainOrigin>(domainOrigin)); }
   void cmdSetDepthClampEnableEXT(Bool32 depthClampEnable) const { vkCmdSetDepthClampEnableEXT(this->handle, depthClampEnable); }
   void cmdSetPolygonModeEXT(PolygonMode polygonMode) const { vkCmdSetPolygonModeEXT(this->handle, std::bit_cast<VkPolygonMode>(polygonMode)); }
@@ -30258,7 +30280,7 @@ struct CommandBuffer : Handle<VkCommandBuffer, ObjectType::eCommandBuffer> {
   void cmdSetShadingRateImageEnableNV(Bool32 shadingRateImageEnable) const { vkCmdSetShadingRateImageEnableNV(this->handle, shadingRateImageEnable); }
   void cmdSetCoverageReductionModeNV(CoverageReductionModeNV coverageReductionMode) const { vkCmdSetCoverageReductionModeNV(this->handle, std::bit_cast<VkCoverageReductionModeNV>(coverageReductionMode)); }
   void cmdSetRepresentativeFragmentTestEnableNV(Bool32 representativeFragmentTestEnable) const { vkCmdSetRepresentativeFragmentTestEnableNV(this->handle, representativeFragmentTestEnable); }
-#endif // VK_EXT_extended_dynamic_state3
+#endif // VK_EXT_extended_dynamic_state3 || VK_EXT_shader_object
 #if VK_VERSION_1_3
   void cmdCopyBuffer2(const CopyBufferInfo2& copyBufferInfo) const { vkCmdCopyBuffer2(this->handle, std::bit_cast<const VkCopyBufferInfo2*>(&copyBufferInfo)); }
 #endif // VK_VERSION_1_3
@@ -30301,9 +30323,9 @@ struct CommandBuffer : Handle<VkCommandBuffer, ObjectType::eCommandBuffer> {
 #if VK_NV_fragment_shading_rate_enums
   void cmdSetFragmentShadingRateEnumNV(FragmentShadingRateNV shadingRate, std::span<const FragmentShadingRateCombinerOpKHR, 2> combinerOps) const { vkCmdSetFragmentShadingRateEnumNV(this->handle, std::bit_cast<VkFragmentShadingRateNV>(shadingRate), std::bit_cast<const VkFragmentShadingRateCombinerOpKHR*>(combinerOps.data())); }
 #endif // VK_NV_fragment_shading_rate_enums
-#if VK_EXT_vertex_input_dynamic_state
+#if VK_EXT_vertex_input_dynamic_state || VK_EXT_shader_object
   void cmdSetVertexInputEXT(uint32_t vertexBindingDescriptionCount = {}, const VertexInputBindingDescription2EXT* pVertexBindingDescriptions = {}, uint32_t vertexAttributeDescriptionCount = {}, const VertexInputAttributeDescription2EXT* pVertexAttributeDescriptions = {}) const { vkCmdSetVertexInputEXT(this->handle, vertexBindingDescriptionCount, std::bit_cast<const VkVertexInputBindingDescription2EXT*>(pVertexBindingDescriptions), vertexAttributeDescriptionCount, std::bit_cast<const VkVertexInputAttributeDescription2EXT*>(pVertexAttributeDescriptions)); }
-#endif // VK_EXT_vertex_input_dynamic_state
+#endif // VK_EXT_vertex_input_dynamic_state || VK_EXT_shader_object
 #if VK_EXT_color_write_enable
   void cmdSetColorWriteEnableEXT(uint32_t attachmentCount, const Bool32* pColorWriteEnables) const { vkCmdSetColorWriteEnableEXT(this->handle, attachmentCount, pColorWriteEnables); }
 #endif // VK_EXT_color_write_enable
@@ -30586,9 +30608,9 @@ using PhysicalDeviceDriverPropertiesKHR = PhysicalDeviceDriverProperties;
 #if VK_KHR_timeline_semaphore
 using PhysicalDeviceTimelineSemaphorePropertiesKHR = PhysicalDeviceTimelineSemaphoreProperties;
 #endif // VK_KHR_timeline_semaphore
-#if VK_KHR_external_memory_capabilities
+#if VK_KHR_external_memory_capabilities || VK_KHR_external_semaphore_capabilities || VK_KHR_external_fence_capabilities
 using PhysicalDeviceIDPropertiesKHR = PhysicalDeviceIDProperties;
-#endif // VK_KHR_external_memory_capabilities
+#endif // VK_KHR_external_memory_capabilities || VK_KHR_external_semaphore_capabilities || VK_KHR_external_fence_capabilities
 #if VK_EXT_line_rasterization
 using PhysicalDeviceLineRasterizationPropertiesEXT = PhysicalDeviceLineRasterizationProperties;
 #endif // VK_EXT_line_rasterization
@@ -30662,7 +30684,9 @@ inline void AccelerationStructureCreateInfoKHR::attach(OpaqueCaptureDescriptorDa
 #if VK_ARM_tensors
 inline void TensorCreateInfoARM::attach(OpaqueCaptureDescriptorDataCreateInfoEXT& ext) { ext.pNext = const_cast<void*>(pNext); pNext = &ext; }
 #endif // VK_ARM_tensors
+#if VK_EXT_descriptor_heap || VK_ARM_tensors
 inline void TensorViewCreateInfoARM::attach(OpaqueCaptureDescriptorDataCreateInfoEXT& ext) { ext.pNext = const_cast<void*>(pNext); pNext = &ext; }
+#endif // VK_EXT_descriptor_heap || VK_ARM_tensors
 #endif // VK_EXT_descriptor_buffer
 
 #if VK_VERSION_1_3
@@ -31333,11 +31357,11 @@ struct Device : Handle<VkDevice, ObjectType::eDevice> {
 #if VK_KHR_bind_memory2
   Result bindImageMemory2KHR(uint32_t bindInfoCount, const BindImageMemoryInfo* pBindInfos) const { return Result(vkBindImageMemory2KHR(this->handle, bindInfoCount, std::bit_cast<const VkBindImageMemoryInfo*>(pBindInfos))); }
 #endif // VK_KHR_bind_memory2
-#if VK_KHR_swapchain
+#if VK_KHR_swapchain || VK_KHR_device_group
   Result getGroupPresentCapabilitiesKHR(DeviceGroupPresentCapabilitiesKHR* pDeviceGroupPresentCapabilities) const { return Result(vkGetDeviceGroupPresentCapabilitiesKHR(this->handle, std::bit_cast<VkDeviceGroupPresentCapabilitiesKHR*>(pDeviceGroupPresentCapabilities))); }
   Ret<DeviceGroupPresentModeFlagsKHR> getGroupSurfacePresentModesKHR(SurfaceKHR surface) const { DeviceGroupPresentModeFlagsKHR value; return {Result(vkGetDeviceGroupSurfacePresentModesKHR(this->handle, std::bit_cast<VkSurfaceKHR>(surface), std::bit_cast<VkDeviceGroupPresentModeFlagsKHR*>(&value))), value}; }
   Ret<uint32_t> acquireNextImage2KHR(const AcquireNextImageInfoKHR& acquireInfo) const { uint32_t value; return {Result(vkAcquireNextImage2KHR(this->handle, std::bit_cast<const VkAcquireNextImageInfoKHR*>(&acquireInfo), &value)), value}; }
-#endif // VK_KHR_swapchain
+#endif // VK_KHR_swapchain || VK_KHR_device_group
 #if VK_VERSION_1_1
   Ret<DescriptorUpdateTemplate> createDescriptorUpdateTemplate(const DescriptorUpdateTemplateCreateInfo& createInfo, const AllocationCallbacks* pAllocator = {}) const { DescriptorUpdateTemplate value; return {Result(vkCreateDescriptorUpdateTemplate(this->handle, std::bit_cast<const VkDescriptorUpdateTemplateCreateInfo*>(&createInfo), std::bit_cast<const VkAllocationCallbacks*>(pAllocator), std::bit_cast<VkDescriptorUpdateTemplate*>(&value))), value}; }
 #endif // VK_VERSION_1_1
@@ -31688,9 +31712,9 @@ struct Device : Handle<VkDevice, ObjectType::eDevice> {
 #if VK_KHR_maintenance5
   void getImageSubresourceLayout2KHR(Image image, const ImageSubresource2& subresource, SubresourceLayout2* pLayout) const { vkGetImageSubresourceLayout2KHR(this->handle, std::bit_cast<VkImage>(image), std::bit_cast<const VkImageSubresource2*>(&subresource), std::bit_cast<VkSubresourceLayout2*>(pLayout)); }
 #endif // VK_KHR_maintenance5
-#if VK_EXT_host_image_copy
+#if VK_EXT_host_image_copy || VK_EXT_image_compression_control
   void getImageSubresourceLayout2EXT(Image image, const ImageSubresource2& subresource, SubresourceLayout2* pLayout) const { vkGetImageSubresourceLayout2EXT(this->handle, std::bit_cast<VkImage>(image), std::bit_cast<const VkImageSubresource2*>(&subresource), std::bit_cast<VkSubresourceLayout2*>(pLayout)); }
-#endif // VK_EXT_host_image_copy
+#endif // VK_EXT_host_image_copy || VK_EXT_image_compression_control
 #if VK_EXT_pipeline_properties
   Ret<BaseOutStructure> getPipelinePropertiesEXT(const PipelineInfoEXT& pipelineInfo) const { BaseOutStructure value; return {Result(vkGetPipelinePropertiesEXT(this->handle, std::bit_cast<const VkPipelineInfoEXT*>(&pipelineInfo), &value)), value}; }
 #endif // VK_EXT_pipeline_properties
@@ -31912,9 +31936,9 @@ struct PhysicalDevice : Handle<VkPhysicalDevice, ObjectType::ePhysicalDevice> {
 #if VK_EXT_display_surface_counter
   Result getSurfaceCapabilities2EXT(SurfaceKHR surface, SurfaceCapabilities2EXT* pSurfaceCapabilities) const { return Result(vkGetPhysicalDeviceSurfaceCapabilities2EXT(this->handle, std::bit_cast<VkSurfaceKHR>(surface), std::bit_cast<VkSurfaceCapabilities2EXT*>(pSurfaceCapabilities))); }
 #endif // VK_EXT_display_surface_counter
-#if VK_KHR_swapchain
+#if VK_KHR_swapchain || VK_KHR_device_group
   Result getPresentRectanglesKHR(SurfaceKHR surface, uint32_t* pRectCount, Rect2D* pRects = {}) const { return Result(vkGetPhysicalDevicePresentRectanglesKHR(this->handle, std::bit_cast<VkSurfaceKHR>(surface), pRectCount, std::bit_cast<VkRect2D*>(pRects))); }
-#endif // VK_KHR_swapchain
+#endif // VK_KHR_swapchain || VK_KHR_device_group
 #if VK_EXT_sample_locations
   void getMultisamplePropertiesEXT(SampleCountFlagBits samples, MultisamplePropertiesEXT* pMultisampleProperties) const { vkGetPhysicalDeviceMultisamplePropertiesEXT(this->handle, std::bit_cast<VkSampleCountFlagBits>(samples), std::bit_cast<VkMultisamplePropertiesEXT*>(pMultisampleProperties)); }
 #endif // VK_EXT_sample_locations
