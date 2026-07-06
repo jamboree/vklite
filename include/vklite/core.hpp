@@ -112,7 +112,7 @@ namespace vklite {
     }
 
     inline void check(Result r) {
-        if (const int ec = int32_t(r))
+        if (const int ec = int32_t(r); ec < 0)
             throw std::system_error(ec, errorCategory());
     }
 
