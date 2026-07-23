@@ -10,6 +10,7 @@ namespace vklite::vma {
         T handle = {};
 
         explicit operator bool() const noexcept { return !!handle; }
+        T operator->() const noexcept { return handle; }
     };
 
     enum class AllocatorCreateFlagBits : uint32_t {
